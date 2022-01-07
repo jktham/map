@@ -1,6 +1,6 @@
 import csv
-import time
 import json
+import time
 
 start_time = time.time()
 
@@ -8,7 +8,7 @@ data = []
 cities = []
 result = []
 
-with open(r".\data\worldcities.csv", encoding="utf8") as file:
+with open(r".\data\simplemaps\worldcities.csv", encoding="utf8") as file:
     reader = csv.DictReader(file, delimiter=",")
     for row in reader:
         data.append(row)
