@@ -19,4 +19,4 @@ gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.Longitude, df.Latitude
 
 bg = f.Map()
 map = gdf.explore(m=bg, marker_kwds=dict(radius=2, fill=True))
-map.save(r'.\data\map.html')
+map.save(r'index.html')
