@@ -1,8 +1,10 @@
 import json
-import matplotlib.pyplot as plt
+
+import folium
 import geopandas as gpd
+import matplotlib.pyplot as plt
 import pandas as pd
-import folium as f
+from shapely.geometry.linestring import LineString
 
 with open(r".\data\result.json") as file:
     data = json.load(file)
@@ -15,8 +17,21 @@ df = pd.DataFrame({
     "Longitude": [city["lng"] for city in data]
 })
 
-gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.Longitude, df.Latitude))
+geometry = []
 
-bg = f.Map()
-map = gdf.explore(m=bg, marker_kwds=dict(radius=2, fill=True))
+for i in range(len(data)):
+    j = 1
+    if data[i]["city_ascii"] != data[i-1]["city_ascii"]:
+        while data[i+j]["city_ascii"] == data[i]["city_ascii"]:
+            geometry.append(LineString(coordinates=((float(data[i]["lng"]), float(data[i]["lat"])), (float(data[i+j]["lng"]), float(data[i+j]["lat"])))))
+            j += 1
+            if i+j == len(data):
+                break
+
+points = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.Longitude, df.Latitude))
+lines = gpd.GeoDataFrame(geometry=geometry)
+
+background = folium.Map()
+map = lines.explore(m=background, style_kwds=dict(weight=0.2, color="red"))
+map = points.explore(m=map, marker_kwds=dict(radius=1, fill=True))
 map.save(r'index.html')
