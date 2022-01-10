@@ -20,9 +20,10 @@ for i in range(len(cities)):
     if cities.count(cities[i]) > 1:
         result.append(data[i])
 
-result.sort(key=lambda city: (city["city_ascii"], city["population"] * -1))
+result.sort(key=lambda city: (float(city["population"]) * -1) if city["population"] else 0)
+result.sort(key=lambda city: city["city_ascii"])
 
-with open(r".\data\result.json", "w") as file:
+with open(r".\data\sorted.json", "w") as file:
     json.dump(result, file)
 
 print(time.time() - start_time)
